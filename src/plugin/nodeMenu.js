@@ -33,6 +33,8 @@ export default function(mind) {
     '#27ae61',
     '#2ecc71',
   ]
+
+  let builtInTags = mind.builtInTags
   styleDiv.innerHTML = `
       <div class="nm-fontsize-container">
         ${['15', '24', '32']
@@ -59,9 +61,14 @@ export default function(mind) {
       </div>
   `
   tagDiv.innerHTML = `
-      ${i18n[locale].tag}<input class="nm-tag" tabindex="-1" placeholder="${
-    i18n[locale].tagsSeparate
-  }" /><br>
+      ${i18n[locale].tag}
+      <div class="nm-tags-group ${builtInTags.length > 0 ? 'had' : ''}">
+       ${builtInTags.map(tag => {
+          return `<span class="nm-tags" data-tag="${tag}">${tag}</span>`
+        }).join('')}
+       </div>
+      <input class="nm-tag" tabindex="-1" placeholder="${i18n[locale].tagsSeparate}" />
+      <br>
   `
   iconDiv.innerHTML = `
       ${i18n[locale].icon}<input class="nm-icon" tabindex="-1" placeholder="${
@@ -93,6 +100,7 @@ export default function(mind) {
   let buttonContainer = menuContainer.querySelector('.button-container')
   let fontBtn = menuContainer.querySelector('.font')
   let tagInput = document.querySelector('.nm-tag')
+  let tagsGroup = document.querySelector('.nm-tags-group')
   let iconInput = document.querySelector('.nm-icon')
   menuContainer.onclick = e => {
     if (!mind.currentNode) return
@@ -151,12 +159,34 @@ export default function(mind) {
     }
   }
   tagInput.onchange = e => {
-    if (!mind.currentNode) return
+    if (!mind.currentNode || mind.currentNode.nodeObj.root === true) return
     if (!e.target.value) {
       mind.currentNode.nodeObj.tags = []
     } else {
       mind.currentNode.nodeObj.tags = e.target.value.split(',')
     }
+    mind.bus.fire('operation', {
+      name: 'setTag',
+      obj: mind.currentNode.nodeObj,
+    })
+    mind.updateNodeTags(mind.currentNode.nodeObj)
+  }
+  tagsGroup.onclick = e => {
+    if (!mind.currentNode || mind.currentNode.nodeObj.root === true) return
+    let tagValue = e.target.getAttribute('data-tag')
+    if (!tagValue) return
+    mind.currentNode.nodeObj.tags = mind.currentNode.nodeObj.tags || []
+    let searchTag = mind.currentNode.nodeObj.tags.indexOf(tagValue)
+    if (searchTag === -1) {
+      mind.currentNode.nodeObj.tags.push(tagValue)
+    } else {
+      mind.currentNode.nodeObj.tags.splice(searchTag, 1)
+    }
+    tagInput.value = mind.currentNode.nodeObj.tags.join(',')
+    mind.bus.fire('operation', {
+      name: 'setTag',
+      obj: mind.currentNode.nodeObj,
+    })
     mind.updateNodeTags(mind.currentNode.nodeObj)
   }
   iconInput.onchange = e => {
