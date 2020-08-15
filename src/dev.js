@@ -11,6 +11,7 @@ let mind = new MindElixir({
   draggable: true,
   editable: true,
   contextMenu: true,
+  builtInTags: ['tag1', 'tag2', 'tag3', 'tag4', 'tag5'],
   contextMenuOption: {
     focus: true,
     link: true,
@@ -24,7 +25,7 @@ let mind = new MindElixir({
     ],
   },
   toolBar: true,
-  nodeMenu: false,
+  nodeMenu: true,
   keypress: true,
   allowUndo: false,
   before: {

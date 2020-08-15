@@ -102,6 +102,12 @@ export default {
           { topic: 'toolbar.rb', id: '339060ac0343f0d7' },
           { topic: 'toolbar.lt', id: '3390622b29323de9' },
           { topic: 'nmenu', id: '3390645e6d7c2b4e' },
+          { topic: 'line1\nline2〔潜在需要点击继续处〕[Player]～\n' +
+                '你现在穿的这身衣服，\n' +
+                '非常适合你哦～\n' +
+                '对了！我有一样东西想送给你，\n' +
+                '你愿意收下吗～？\n' +
+                '就这个……', id: '3390675e6d7c2b4e' },
         ],
       },
     ],
