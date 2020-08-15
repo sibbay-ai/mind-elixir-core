@@ -54,7 +54,7 @@ export let createTop = function (nodeObj) {
 export let createTopic = function (nodeObj) {
   let topic = $d.createElement('tpc')
   topic.nodeObj = nodeObj
-  topic.innerHTML = nodeObj.topic
+  topic.innerHTML = nodeObj.topic.replace(/\n/g, '<br>')
   topic.dataset.nodeid = 'me' + nodeObj.id
   topic.draggable = vari.mevar_draggable
   return topic

@@ -27,8 +27,8 @@ export let clearPreview = function (el) {
 }
 
 export let canPreview = function (el, dragged) {
-  let isContain = dragged.parentNode.parentNode.contains(el)
-  return el && el.tagName === 'TPC' && el !== dragged && !isContain && el.nodeObj.root !== true
+  // let isContain = dragged.parentNode.parentNode.contains(el)
+  return el && el.tagName === 'TPC' && el !== dragged && el.nodeObj.root !== true
 }
 
 export default function (mind) {
@@ -36,7 +36,7 @@ export default function (mind) {
   var insertLocation
 
   /* events fired on the draggable target */
-  mind.map.addEventListener('drag',throttle( function (event) {
+  mind.map.addEventListener('drag',function (event) {
     clearPreview(meet)
     let topMeet = $d.elementFromPoint(event.clientX, event.clientY - (event.target.clientHeight / 2))
     if (canPreview(topMeet, dragged)) {
@@ -62,12 +62,10 @@ export default function (mind) {
             insertLocation = 'in'
             break
         }
-      }else{
-        insertLocation = meet = null
       }
-      }
+    }
     if(meet)insertPreview(meet, insertLocation)
-  },100))
+  })
 
   mind.map.addEventListener('dragstart', function (event) {
     // store a ref. on the dragged elem
@@ -89,8 +87,8 @@ export default function (mind) {
         break
       case 'after':
         mind.insertSibling(meet, obj)
-        mind.removeNode(dragged)
         mind.selectNode(E(obj.id))
+        mind.removeNode(dragged)
         break
       case 'in':
         mind.moveNode(dragged, meet)

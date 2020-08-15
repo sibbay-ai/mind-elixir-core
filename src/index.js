@@ -108,6 +108,7 @@ function MindElixir({
   newTopicName,
   before,
   allowUndo,
+  builtInTags,
 }) {
   vari.newTopicName = newTopicName
   this.mindElixirBox = document.querySelector(el)
@@ -127,6 +128,7 @@ function MindElixir({
   vari.mevar_draggable = draggable === undefined ? true : draggable
   this.editable = editable === undefined ? true : editable
   this.allowUndo = allowUndo === undefined ? true : allowUndo
+  this.builtInTags = builtInTags || []
   this.parentMap = {} // deprecate?
 
   this.currentNode = null // the selected <tpc/> element
