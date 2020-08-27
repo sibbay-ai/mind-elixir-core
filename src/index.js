@@ -107,7 +107,6 @@ function MindElixir({
   keypress,
   before,
   newTopicName,
-  before,
   allowUndo,
   builtInTags,
 }) {
