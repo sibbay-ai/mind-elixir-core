@@ -105,6 +105,7 @@ function MindElixir({
   toolBar,
   nodeMenu,
   keypress,
+  before,
   newTopicName,
   before,
   allowUndo,
