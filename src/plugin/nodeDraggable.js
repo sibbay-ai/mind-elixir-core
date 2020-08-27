@@ -27,8 +27,8 @@ export let clearPreview = function (el) {
 }
 
 export let canPreview = function (el, dragged) {
-  // let isContain = dragged.parentNode.parentNode.contains(el)
-  return el && el.tagName === 'TPC' && el !== dragged && el.nodeObj.root !== true
+  let isContain = dragged.parentNode.parentNode.contains(el)
+  return el && el.tagName === 'TPC' && el !== dragged && !isContain && el.nodeObj.root !== true
 }
 
 export default function (mind) {
@@ -81,14 +81,12 @@ export default function (mind) {
     let obj = dragged.nodeObj
     switch (insertLocation) {
       case 'before':
-        mind.insertBefore(meet, obj)
         mind.removeNode(dragged)
-        mind.selectNode(E(obj.id))
+        mind.insertBefore(meet, obj)
         break
       case 'after':
-        mind.insertSibling(meet, obj)
-        mind.selectNode(E(obj.id))
         mind.removeNode(dragged)
+        mind.insertSibling(meet, obj)
         break
       case 'in':
         mind.moveNode(dragged, meet)
