@@ -8,6 +8,8 @@ import {
   addParentLink,
   moveUpObj,
   moveDownObj,
+  generateNewTemplateObjs,
+  generateNewTemplateObj,
 } from './utils/index'
 import { findEle, createExpander, createGroup } from './utils/dom'
 import { LEFT, RIGHT, SIDE } from './const'
@@ -382,6 +384,97 @@ export let beginEdit = function (el) {
   let nodeEle = el || this.currentNode
   if (!nodeEle) return
   this.createInputDiv(nodeEle)
+}
+
+export let choiceNewNodeTemplate = function (el) {
+  let nodeEle = el || this.currentNode
+
+  if (!nodeEle) return
+  let nodeObj = nodeEle.nodeObj
+  if (nodeObj.expanded === false) {
+    console.warn('Node should be extended')
+    return
+  }
+
+  let top = nodeEle.parentElement
+
+  let temNodeTemplate = nodeEle.parentElement.parentElement.getElementsByClassName('temporary-node-template')
+  if (temNodeTemplate.length > 0) {
+    let findSelected = '0'
+    for (const tntkey in temNodeTemplate) {
+      const tnt = temNodeTemplate[tntkey]
+      if (tnt.className === 'temporary-node-template template-selected') {
+        findSelected = tntkey
+        tnt.className = 'temporary-node-template'
+        tnt.style.opacity = '0.5'
+      }
+    }
+    let needSelected
+    if (Number(findSelected) === temNodeTemplate.length - 1) {
+      needSelected = temNodeTemplate['0']
+    } else {
+      needSelected = temNodeTemplate[String(Number(findSelected) + 1)]
+    }
+    needSelected.className = 'temporary-node-template template-selected'
+    needSelected.style.opacity = '1'
+    return
+  }
+
+  const templateObjs = generateNewTemplateObjs(this.nodeTemplate);
+  for (const ntpkey in templateObjs) {
+    const ntp = templateObjs[ntpkey]
+    let { grp, top: newTop } = createGroup(ntp)
+    if (ntpkey !== '0') {
+      newTop.style.opacity = '0.5'
+      newTop.className = 'temporary-node-template'
+    } else {
+      newTop.className = 'temporary-node-template template-selected'
+    }
+    newTop.setAttribute('data-id', ntp.id)
+    if (top.tagName === 'T') {
+      if (top.children[1]) {
+        top.nextSibling.appendChild(grp)
+      } else {
+        let c = $d.createElement('children')
+        c.appendChild(grp)
+        top.appendChild(createExpander(true))
+        top.parentElement.insertBefore(c, top.nextSibling)
+      }
+      this.linkDiv(grp.offsetParent)
+    } else if (top.tagName === 'ROOT') {
+      this.processPrimaryNode(grp, ntp)
+      top.nextSibling.appendChild(grp)
+      this.linkDiv()
+    }
+  }
+
+}
+
+export let clearNodeTemplate = function (el) {
+  let nodeEle = el || this.currentNode
+
+  if (!nodeEle) return
+  let nodeObj = nodeEle.nodeObj
+  if (nodeObj.expanded === false) {
+    console.warn('Node should be extended')
+    return
+  }
+  let selectedId
+  let temNodeTemplate = nodeEle.parentElement.parentElement.getElementsByClassName('temporary-node-template')
+  for (const tnt of Array.from(temNodeTemplate)) {
+    if (tnt.className === 'temporary-node-template template-selected') {
+      selectedId = tnt.getAttribute('data-id')
+    }
+    tnt.parentNode.remove()
+  }
+  this.linkDiv()
+  this.addChild(nodeEle, generateNewTemplateObj(this.nodeTemplate, selectedId)).then( () => {
+    let newChildren = nodeEle.parentElement.nextSibling.childNodes
+    newChildren = newChildren[newChildren.length - 1]
+    newChildren = newChildren.firstChild.firstChild
+    this.createInputDiv(newChildren)
+  })
+
 }
 
 export let setNodeTopic = function (tpc, topic) {

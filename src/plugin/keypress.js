@@ -1,10 +1,18 @@
 export default function (mind) {
+  let selectChildNodeTemplate = false
+  let selectSiblingNodeTemplate = false
   let key2func = {
-    13: () => {
+    13: (e) => {
+      // ctrl enter
+      if (e.ctrlKey) {
+        mind.choiceNewNodeTemplate(mind.currentNode.parentElement.parentNode.parentNode.previousSibling.childNodes[0])
+        selectSiblingNodeTemplate = true
+        return
+      }
       // enter
       mind.insertSibling()
     },
-    9: () => {
+    9: (e) => {
       // tab
       mind.addChild()
     },
@@ -49,11 +57,32 @@ export default function (mind) {
       if (!mind.allowUndo) return
       if (e.metaKey || e.ctrlKey) mind.undo()
     },
+    // ctrl .
+    190: e => {
+      if (!e.ctrlKey) return
+      mind.choiceNewNodeTemplate()
+      selectChildNodeTemplate = true
+    }
+  }
+  mind.map.onkeyup = e => {
+    if (e.keyCode === 17 && selectChildNodeTemplate) {
+      mind.clearNodeTemplate()
+      selectChildNodeTemplate = false
+    }
+    if (e.keyCode === 17 && selectSiblingNodeTemplate) {
+      mind.clearNodeTemplate(mind.currentNode.parentElement.parentNode.parentNode.previousSibling.childNodes[0])
+      selectSiblingNodeTemplate = false
+    }
   }
   mind.map.onkeydown = e => {
-    console.log(e, e.target)
+    console.log(e, e.target, e.currentTarget)
     if (e.target !== e.currentTarget) {
       // input
+      // send all key for user define
+      mind.bus.fire('operation', {
+        name: 'inputKeypress',
+        obj: e,
+      })
       return
     }
     e.preventDefault()

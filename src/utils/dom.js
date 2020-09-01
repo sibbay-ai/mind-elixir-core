@@ -77,12 +77,12 @@ export function createInputDiv(tpc) {
   console.time('createInputDiv')
   if (!tpc) return
   let div = $d.createElement('div')
-  let origin = tpc.childNodes[0].textContent
+  let origin = tpc.innerHTML
   tpc.appendChild(div)
   div.innerHTML = origin
   div.contentEditable = true
   div.spellcheck = false
-  div.style.cssText = `min-width:${tpc.offsetWidth - 8}px;`
+  div.style.cssText = `min-width:${tpc.offsetWidth - 8}px;min-height:${tpc.offsetHeight - 10}px;color:#2b2b2b;`
   if (this.direction === LEFT) div.style.right = 0
   div.focus()
 
@@ -100,15 +100,20 @@ export function createInputDiv(tpc) {
       // 不停止冒泡冒到document就把节点删了
       e.stopPropagation()
     } else if (key === 13 || key === 9) {
+      if (e.shiftKey) {
+        // shift enter
+        return
+      }
       e.preventDefault()
       this.inputDiv.blur()
       this.map.focus()
     }
   })
+
   div.addEventListener('blur', () => {
     if (!div) return // 防止重复blur
     let node = tpc.nodeObj
-    let topic = div.textContent.trim()
+    let topic = div.innerHTML
     if (topic === '') node.topic = origin
     else node.topic = topic
     div.remove()
@@ -119,7 +124,8 @@ export function createInputDiv(tpc) {
       origin,
     })
     if (topic === origin) return // 没有修改不做处理
-    tpc.childNodes[0].textContent = node.topic
+    // tpc.childNodes[0].textContent = node.topic
+    tpc.innerHTML = node.topic
     this.linkDiv()
   })
   console.timeEnd('createInputDiv')

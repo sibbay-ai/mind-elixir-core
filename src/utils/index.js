@@ -119,6 +119,31 @@ export function generateNewObj() {
   }
 }
 
+export function generateNewTemplateObjs(nodeTemplate) {
+  let objs = [generateNewObj()]
+  for (const nte of nodeTemplate) {
+    objs.push({
+      topic: nte.text,
+      id: nte.id,
+      style: { color: nte.color, background: nte.background }
+    })
+  }
+  return objs
+}
+
+export function generateNewTemplateObj(nodeTemplate, templateId) {
+  for (const nte of nodeTemplate) {
+    if (nte.id === templateId) {
+      return {
+        topic: vari.newTopicName || 'new node',
+        id: generateUUID(),
+        style: { color: nte.color, background: nte.background }
+      }
+    }
+  }
+  return generateNewObj()
+}
+
 export function generateNewLink(from, to) {
   let id = generateUUID()
   return {
