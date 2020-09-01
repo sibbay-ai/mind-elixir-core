@@ -39,6 +39,8 @@ import {
   updateNodeIcons,
   processPrimaryNode,
   setNodeTopic,
+  choiceNewNodeTemplate,
+  clearNodeTemplate,
 } from './nodeOperation'
 import {
   createLink,
@@ -109,6 +111,7 @@ function MindElixir({
   newTopicName,
   allowUndo,
   builtInTags,
+  nodeTemplate,
 }) {
   vari.newTopicName = newTopicName
   this.mindElixirBox = document.querySelector(el)
@@ -129,6 +132,7 @@ function MindElixir({
   this.editable = editable === undefined ? true : editable
   this.allowUndo = allowUndo === undefined ? true : allowUndo
   this.builtInTags = builtInTags || []
+  this.nodeTemplate = nodeTemplate || []
   this.parentMap = {} // deprecate?
 
   this.currentNode = null // the selected <tpc/> element
@@ -232,6 +236,8 @@ MindElixir.prototype = {
       beginEdit.apply(this, args)
     }
   },
+  choiceNewNodeTemplate,
+  clearNodeTemplate,
   updateNodeStyle,
   updateNodeTags,
   updateNodeIcons,

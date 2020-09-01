@@ -11,6 +11,8 @@ export default {
 
     font: '文字',
     background: '背景',
+    style: '样式',
+    nodeTemplate: '节点模板',
     tag: '标签',
     icon: '图标',
     tagsSeparate: '多个标签半角逗号分隔',
@@ -28,6 +30,8 @@ export default {
 
     font: 'Font',
     background: 'Background',
+    style: 'Style',
+    nodeTemplate: 'Template',
     tag: 'Tag',
     icon: 'Icon',
     tagsSeparate: 'Separate tags by comma',
@@ -45,6 +49,8 @@ export default {
 
     font: 'フォント',
     background: 'バックグラウンド',
+    style: 'スタイル',
+    nodeTemplate: 'ノードテンプレート',
     tag: 'タグ',
     icon: 'アイコン',
     tagsSeparate: '複数タグはカンマ区切り',

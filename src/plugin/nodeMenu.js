@@ -8,10 +8,8 @@ export default function(mind) {
     div.innerHTML = `<span>${name}</span>`
     return div
   }
-  let bgOrFont
-  let styleDiv = createDiv('nm-style', 'style')
-  let tagDiv = createDiv('nm-tag', 'tag')
-  let iconDiv = createDiv('nm-icon', 'icon')
+
+  let blockDiv = createDiv('nm-style', 'style')
 
   let colorList = [
     '#2c3e50',
@@ -34,57 +32,90 @@ export default function(mind) {
     '#2ecc71',
   ]
 
+  let nodeTemplate = mind.nodeTemplate
+
   let builtInTags = mind.builtInTags
-  styleDiv.innerHTML = `
-      <div class="nm-fontsize-container">
-        ${['15', '24', '32']
-          .map(size => {
-            return `<div class="size"  data-size="${size}">
-        <svg class="icon" style="width: ${size}px;height: ${size}px" aria-hidden="true">
-          <use xlink:href="#icon-a"></use>
-        </svg></div>`
-          })
-          .join('')}<div class="bold"><svg class="icon" aria-hidden="true">
-  <use xlink:href="#icon-B"></use>
-  </svg></div>
+
+  let headHTML = `
+    <div class="bof">
+      <span class="nm-node-template-button">${i18n[locale].nodeTemplate}</span>
+      <span class="nm-style-button">${i18n[locale].style}</span>
+      <span class="nm-tag-button">${i18n[locale].tag}</span>
+      <span class="nm-icon-button">${i18n[locale].icon}</span>
+    </div>
+  `
+
+  let styleHTML = `
+    <div class="nm-style-block" style="display: none">
+    ${i18n[locale].font}
+    <div class="nm-fontsize-container">
+        ${['15', '24', '32'].map(size => {
+      return `<div class="size"  data-size="${size}">
+            <svg class="icon" style="width: ${size}px;height: ${size}px" aria-hidden="true">
+              <use xlink:href="#icon-a"></use>
+            </svg></div>`
+    }).join('')}
+          <div class="bold">
+            <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-B"></use>
+            </svg>
+          </div>
       </div>
       <div class="nm-fontcolor-container">
-        ${colorList
-          .map(color => {
-            return `<div class="split6"><div class="palette" data-color="${color}" style="background-color: ${color};"></div></div>`
-          })
-          .join('')}
+          ${colorList.map(color => {
+      return `<div class="split6"><div class="palette fontcolor-palette" data-color="${color}" style="background-color: ${color};"></div></div>`
+    }).join('')}
       </div>
-      <div class="bof">
-      <span class="font">${i18n[locale].font}</span>
-      <span class="background">${i18n[locale].background}</span>
+      ${i18n[locale].background}
+      <div class="nm-fontcolor-container">
+          ${colorList.map(color => {
+      return `<div class="split6"><div class="palette background-palette" data-color="${color}" style="background-color: ${color};"></div></div>`
+    }).join('')}
       </div>
+    </div>
   `
-  tagDiv.innerHTML = `
-      ${i18n[locale].tag}
-      <div class="nm-tags-group ${builtInTags.length > 0 ? 'had' : ''}">
-       ${builtInTags.map(tag => {
-          return `<span class="nm-tags" data-tag="${tag}">${tag}</span>`
+
+  let nodeTemplateHTML = `
+    <div class="nm-node-template-block" style="">
+    <div class="nm-node-template-group">
+        ${nodeTemplate.map(template => {
+            return `<div class="nm-node" data-id="${template.id}" style="color: ${template.color}; background: ${template.background}">${template.text}</div>`
         }).join('')}
-       </div>
-      <input class="nm-tag" tabindex="-1" placeholder="${i18n[locale].tagsSeparate}" />
-      <br>
+    </div>
+   
+    </div>
   `
-  iconDiv.innerHTML = `
-      ${i18n[locale].icon}<input class="nm-icon" tabindex="-1" placeholder="${
-    i18n[locale].iconsSeparate
-  }" /><br>
+
+  let tagHTML = `
+    <div class="nm-tag-block" style="display: none">
+    <div class="nm-tags-group ${builtInTags.length > 0 ? 'had' : ''}">
+       ${builtInTags.map(tag => {
+        return `<span class="nm-tags" data-tag="${tag}">${tag}</span>`
+       }).join('')}
+    </div>
+    <input class="nm-tag" tabindex="-1" placeholder="${i18n[locale].tagsSeparate}" />
+    <br>
+    </div>
   `
+
+  let iconHTML = `
+    <div class="nm-icon-block" style="display: none">
+    <input class="nm-icon" tabindex="-1" placeholder="${i18n[locale].iconsSeparate}" />
+    <br>
+    </div>
+  `
+
+  blockDiv.innerHTML = headHTML + styleHTML + nodeTemplateHTML + tagHTML + iconHTML
 
   let menuContainer = document.createElement('nmenu')
   menuContainer.innerHTML = `
-  <div class="button-container"><svg class="icon" aria-hidden="true">
+  <div class="button-container">
+  <svg class="icon" aria-hidden="true">
   <use xlink:href="#icon-close"></use>
-  </svg></div>
+  </svg>
+  </div>
   `
-  menuContainer.appendChild(styleDiv)
-  menuContainer.appendChild(tagDiv)
-  menuContainer.appendChild(iconDiv)
+  menuContainer.appendChild(blockDiv)
   menuContainer.hidden = true
 
   function clearSelect(klass, remove) {
@@ -98,41 +129,68 @@ export default function(mind) {
   let sizeSelector = menuContainer.querySelectorAll('.size')
   let bold = menuContainer.querySelector('.bold')
   let buttonContainer = menuContainer.querySelector('.button-container')
-  let fontBtn = menuContainer.querySelector('.font')
+
   let tagInput = document.querySelector('.nm-tag')
   let tagsGroup = document.querySelector('.nm-tags-group')
+  let nodeTemplateGroup = document.querySelector('.nm-node-template-group')
   let iconInput = document.querySelector('.nm-icon')
+
+  let styleButton = document.querySelector('.nm-style-button')
+  let nodeTemplateButton = document.querySelector('.nm-node-template-button')
+  let tagButton = document.querySelector('.nm-tag-button')
+  let iconButton = document.querySelector('.nm-icon-button')
+
+  let styleBlock = document.querySelector('.nm-style-block')
+  let nodeTemplateBlock = document.querySelector('.nm-node-template-block')
+  let tagBlock = document.querySelector('.nm-tag-block')
+  let iconBlock = document.querySelector('.nm-icon-block')
+
+  let buttonBlockGroup = {
+    'tag': [tagButton, tagBlock],
+    'node-template': [nodeTemplateButton, nodeTemplateBlock],
+    'style': [styleButton, styleBlock],
+    'icon': [iconButton, iconBlock]
+  }
+
+  function resetButtonStatus(sign) {
+    for (const bbge in buttonBlockGroup) {
+      if (sign === bbge) {
+        buttonBlockGroup[bbge][0].className = `nm-${bbge}-button selected`
+        buttonBlockGroup[bbge][1].style = ''
+        continue
+      }
+      buttonBlockGroup[bbge][0].className = `nm-${bbge}-button`
+      buttonBlockGroup[bbge][1].style = 'display:none'
+    }
+  }
+
   menuContainer.onclick = e => {
     if (!mind.currentNode) return
     let nodeObj = mind.currentNode.nodeObj
-    if (e.target.className === 'palette') {
+    if (e.target.className === 'palette fontcolor-palette') {
       if (!nodeObj.style) nodeObj.style = {}
       clearSelect('.palette', 'nmenu-selected')
-      e.target.className = 'palette nmenu-selected'
-      if (bgOrFont === 'font') {
-        nodeObj.style.color = e.target.dataset.color
-      } else if (bgOrFont === 'background') {
-        nodeObj.style.background = e.target.dataset.color
-      }
+      e.target.className = 'palette fontcolor-palette nmenu-selected'
+      nodeObj.style.color = e.target.dataset.color
       mind.updateNodeStyle(nodeObj)
-    } else if (e.target.className === 'background') {
+    } else if (e.target.className === 'palette background-palette') {
+      if (!nodeObj.style) nodeObj.style = {}
       clearSelect('.palette', 'nmenu-selected')
-      bgOrFont = 'background'
-      e.target.className = 'background selected'
-      e.target.previousElementSibling.className = 'font'
-      if (nodeObj.style && nodeObj.style.background)
-        menuContainer.querySelector(
-          '.palette[data-color="' + nodeObj.style.background + '"]'
-        ).className = 'palette nmenu-selected'
-    } else if (e.target.className === 'font') {
+      e.target.className = 'palette background-palette nmenu-selected'
+      nodeObj.style.background = e.target.dataset.color
+      mind.updateNodeStyle(nodeObj)
+    } else if (e.target.className === 'nm-style-button') {
       clearSelect('.palette', 'nmenu-selected')
-      bgOrFont = 'font'
-      e.target.className = 'font selected'
-      e.target.nextElementSibling.className = 'background'
-      if (nodeObj.style && nodeObj.style.color)
-        menuContainer.querySelector(
-          '.palette[data-color="' + nodeObj.style.color + '"]'
-        ).className = 'palette nmenu-selected'
+      resetButtonStatus('style')
+    } else if (e.target.className === 'nm-node-template-button') {
+      clearSelect('.palette', 'nmenu-selected')
+      resetButtonStatus('node-template')
+    } else if (e.target.className === 'nm-tag-button') {
+      clearSelect('.palette', 'nmenu-selected')
+      resetButtonStatus('tag')
+    } else if (e.target.className === 'nm-icon-button') {
+      clearSelect('.palette', 'nmenu-selected')
+      resetButtonStatus('icon')
     }
   }
   Array.from(sizeSelector).map(
@@ -157,6 +215,27 @@ export default function(mind) {
       e.currentTarget.className = 'bold size-selected'
       mind.updateNodeStyle(mind.currentNode.nodeObj)
     }
+  }
+  nodeTemplateGroup.onclick = e => {
+    if (!mind.currentNode) return
+    let templateId = e.target.getAttribute('data-id')
+
+    for (const nt of nodeTemplate) {
+      console.log(nt)
+      if (nt.id === templateId) {
+        let nodeObj = mind.currentNode.nodeObj
+        if (nodeObj.style) {
+          nodeObj.style.color = nt.color
+          nodeObj.style.background = nt.background
+        } else {
+          nodeObj.style = {color: nt.color, background: nt.background}
+        }
+
+        mind.updateNodeStyle(nodeObj)
+        break
+      }
+    }
+
   }
   tagInput.onchange = e => {
     if (!mind.currentNode || mind.currentNode.nodeObj.root === true) return
@@ -218,9 +297,7 @@ export default function(mind) {
     clearSelect('.palette', 'nmenu-selected')
     clearSelect('.size', 'size-selected')
     clearSelect('.bold', 'size-selected')
-    bgOrFont = 'font'
-    fontBtn.className = 'font selected'
-    fontBtn.nextElementSibling.className = 'background'
+    resetButtonStatus('node-template')
     if (nodeObj.style) {
       if (nodeObj.style.fontSize)
         menuContainer.querySelector(
@@ -230,8 +307,12 @@ export default function(mind) {
         menuContainer.querySelector('.bold').className = 'bold size-selected'
       if (nodeObj.style.color)
         menuContainer.querySelector(
-          '.palette[data-color="' + nodeObj.style.color + '"]'
-        ).className = 'palette nmenu-selected'
+          '.palette.fontcolor-palette[data-color="' + nodeObj.style.color + '"]'
+        ).className = 'palette fontcolor-palette nmenu-selected'
+      if (nodeObj.style.background)
+        menuContainer.querySelector(
+            '.palette.background-palette[data-color="' + nodeObj.style.background + '"]'
+        ).className = 'palette background-palette nmenu-selected'
     }
     if (nodeObj.tags) {
       tagInput.value = nodeObj.tags.join(',')
