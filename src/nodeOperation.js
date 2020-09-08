@@ -386,7 +386,7 @@ export let beginEdit = function (el) {
   this.createInputDiv(nodeEle)
 }
 
-export let choiceNewNodeTemplate = function (el) {
+export let choiceNewNodeTemplate = function (el, direction='down') {
   let nodeEle = el || this.currentNode
 
   if (!nodeEle) return
@@ -410,17 +410,26 @@ export let choiceNewNodeTemplate = function (el) {
       }
     }
     let needSelected
-    if (Number(findSelected) === temNodeTemplate.length - 1) {
-      needSelected = temNodeTemplate['0']
-    } else {
-      needSelected = temNodeTemplate[String(Number(findSelected) + 1)]
+    if (direction === 'down') {
+      if (Number(findSelected) === temNodeTemplate.length - 1) {
+        needSelected = temNodeTemplate['0']
+      } else {
+        needSelected = temNodeTemplate[String(Number(findSelected) + 1)]
+      }
+    } else if (direction === 'up') {
+      if (Number(findSelected) === 0) {
+        needSelected = temNodeTemplate[temNodeTemplate.length - 1]
+      } else {
+        needSelected = temNodeTemplate[String(Number(findSelected) - 1)]
+      }
     }
+
     needSelected.className = 'temporary-node-template template-selected'
     needSelected.style.opacity = '1'
     return
   }
 
-  const templateObjs = generateNewTemplateObjs(this.nodeTemplate);
+  const templateObjs = generateNewTemplateObjs(this.nodeTemplate, nodeObj)
   for (const ntpkey in templateObjs) {
     const ntp = templateObjs[ntpkey]
     let { grp, top: newTop } = createGroup(ntp)

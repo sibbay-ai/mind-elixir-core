@@ -1,7 +1,7 @@
 import info from '../package.json'
 import vari from './var'
 import { addParentLink } from './utils/index'
-import { findEle, createInputDiv, layout } from './utils/dom'
+import { findEle, createInputDiv, layout, getTopicDiv } from './utils/dom'
 import { createLinkSvg, createLine } from './utils/svg'
 import {
   selectNode,
@@ -253,6 +253,7 @@ MindElixir.prototype = {
   layout,
   linkDiv,
   createInputDiv,
+  getTopicDiv,
 
   selectNode,
   unselectNode,

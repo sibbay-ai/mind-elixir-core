@@ -55,8 +55,9 @@ export default function (mind, option) {
     e.preventDefault()
     // console.log(e.pageY, e.screenY, e.clientY)
     let target = e.target
-    if (target.tagName === 'TPC') {
-      mind.selectNode(target)
+    let targetTPC = target.parentElement
+    if (targetTPC.tagName === 'TPC') {
+      mind.selectNode(targetTPC)
       menuContainer.hidden = false
       let height = menuUl.offsetHeight
       let width = menuUl.offsetWidth
@@ -107,8 +108,8 @@ export default function (mind, option) {
       e => {
         e.preventDefault()
         if (
-          e.target.parentElement.nodeName === 'T' ||
-          e.target.parentElement.nodeName === 'ROOT'
+          e.target.parentElement.parentElement.nodeName === 'T' ||
+          e.target.parentElement.parentElement.nodeName === 'ROOT'
         ) {
           mind.createLink(from, mind.currentNode)
         } else {

@@ -6,8 +6,13 @@ export default function (mind) {
     if (e.target.nodeName === 'EPD') {
       mind.expandNode(e.target.previousSibling)
     } else if (
-      e.target.parentElement.nodeName === 'T' ||
-      e.target.parentElement.nodeName === 'ROOT'
+      e.target.parentElement.parentElement.nodeName === 'T' ||
+      e.target.parentElement.parentElement.nodeName === 'ROOT'
+    ) {
+      mind.selectNode(e.target.parentElement)
+    } else if (
+        e.target.parentElement.nodeName === 'T' ||
+        e.target.parentElement.nodeName === 'ROOT'
     ) {
       mind.selectNode(e.target)
     } else if (e.target.nodeName === 'path') {
@@ -26,10 +31,10 @@ export default function (mind) {
     e.preventDefault()
     if (!mind.editable) return
     if (
-      e.target.parentElement.nodeName === 'T' ||
-      e.target.parentElement.nodeName === 'ROOT'
+      e.target.parentElement.parentElement.nodeName === 'T' ||
+      e.target.parentElement.parentElement.nodeName === 'ROOT'
     ) {
-      mind.beginEdit(e.target)
+      mind.beginEdit(e.target.parentElement)
     }
   })
 

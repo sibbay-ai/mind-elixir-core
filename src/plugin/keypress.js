@@ -4,8 +4,14 @@ export default function (mind) {
   let key2func = {
     13: (e) => {
       // ctrl enter
-      if (e.ctrlKey) {
+      if (e.ctrlKey && !e.shiftKey) {
         mind.choiceNewNodeTemplate(mind.currentNode.parentElement.parentNode.parentNode.previousSibling.childNodes[0])
+        selectSiblingNodeTemplate = true
+        return
+      }
+      // ctrl shift enter
+      if (e.ctrlKey && e.shiftKey) {
+        mind.choiceNewNodeTemplate(mind.currentNode.parentElement.parentNode.parentNode.previousSibling.childNodes[0], 'up')
         selectSiblingNodeTemplate = true
         return
       }
@@ -61,6 +67,12 @@ export default function (mind) {
     190: e => {
       if (!e.ctrlKey) return
       mind.choiceNewNodeTemplate()
+      selectChildNodeTemplate = true
+    },
+    // ctrl ,
+    188: e => {
+      if (!e.ctrlKey) return
+      mind.choiceNewNodeTemplate(null, 'up')
       selectChildNodeTemplate = true
     }
   }

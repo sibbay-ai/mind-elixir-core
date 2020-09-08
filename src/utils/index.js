@@ -119,29 +119,46 @@ export function generateNewObj() {
   }
 }
 
-export function generateNewTemplateObjs(nodeTemplate) {
+export function generateNewTemplateObjs(nodeTemplate, thisNodeObj) {
   let objs = [generateNewObj()]
+  let thisNodeTemplateID = thisNodeObj.templateID
+  let findTemplate
   for (const nte of nodeTemplate) {
+    if (nte.id !== thisNodeTemplateID) continue
+    findTemplate = nte.children
+  }
+  findTemplate = findTemplate || nodeTemplate
+  for (const cn of findTemplate) {
     objs.push({
-      topic: nte.text,
-      id: nte.id,
-      style: { color: nte.color, background: nte.background }
+      topic: cn.text,
+      id: cn.id,
+      style: { color: cn.style.color, background: cn.style.background }
     })
   }
+
   return objs
 }
 
 export function generateNewTemplateObj(nodeTemplate, templateId) {
+  let findTemplate = generateNewObj()
   for (const nte of nodeTemplate) {
     if (nte.id === templateId) {
-      return {
-        topic: vari.newTopicName || 'new node',
-        id: generateUUID(),
-        style: { color: nte.color, background: nte.background }
+      findTemplate = nte
+    } else {
+      for (const x of nte.children || []) {
+        if (x.id === templateId) {
+          findTemplate = x
+        }
       }
     }
   }
-  return generateNewObj()
+  return {
+    topic: vari.newTopicName || 'new node',
+    id: generateUUID(),
+    templateID: templateId,
+    style: { color: findTemplate.style.color, background: findTemplate.style.background },
+    icons: findTemplate.icons || []
+  }
 }
 
 export function generateNewLink(from, to) {
