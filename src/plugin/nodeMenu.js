@@ -80,7 +80,14 @@ export default function(mind) {
     <div class="nm-node-template-block" style="">
     <div class="nm-node-template-group">
         ${nodeTemplate.map(template => {
-            return `<div class="nm-node" data-id="${template.id}" style="color: ${template.style.color}; background: ${template.style.background}">${template.text}</div>`
+            return `<div class="nm-node" 
+                         data-id="${template.id}" 
+                         style="
+                            color: ${template.style.color}; 
+                            background: ${template.style.background}; 
+                            border: ${template.style.border || ''}; 
+                            border-radius: ${template.style.borderRadius || '0px'}
+                         ">${template.text}</div>`
         }).join('')}
     </div>
    
@@ -223,15 +230,8 @@ export default function(mind) {
 
     let templateStyle = generateNewTemplateObj(nodeTemplate, templateId)
     let nodeObj = mind.currentNode.nodeObj
-    if (nodeObj.style) {
-      nodeObj.style.color = templateStyle.style.color
-      nodeObj.style.background = templateStyle.style.background
-    } else {
-      nodeObj.style = {color: templateStyle.style.color, background: templateStyle.style.background}
-    }
-
+    mind.updateNodeObjStyle(nodeObj, templateStyle)
     mind.updateNodeStyle(nodeObj)
-
   }
   tagInput.onchange = e => {
     if (!mind.currentNode || mind.currentNode.nodeObj.root === true) return
@@ -301,11 +301,11 @@ export default function(mind) {
         ).className = 'size size-selected'
       if (nodeObj.style.fontWeight)
         menuContainer.querySelector('.bold').className = 'bold size-selected'
-      if (nodeObj.style.color)
+      if (nodeObj.style.color && colorList.indexOf(nodeObj.style.color) !== -1)
         menuContainer.querySelector(
           '.palette.fontcolor-palette[data-color="' + nodeObj.style.color + '"]'
         ).className = 'palette fontcolor-palette nmenu-selected'
-      if (nodeObj.style.background)
+      if (nodeObj.style.background && colorList.indexOf(nodeObj.style.background) !== -1)
         menuContainer.querySelector(
             '.palette.background-palette[data-color="' + nodeObj.style.background + '"]'
         ).className = 'palette background-palette nmenu-selected'

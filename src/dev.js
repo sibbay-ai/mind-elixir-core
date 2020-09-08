@@ -16,9 +16,10 @@ let mind = new MindElixir({
   nodeTemplate: [
     {
       style: {
-        background: '#27ae61',
-        color: '#ecf0f1',
+        background: 'rgb(80, 194, 139)',
+        color: '#fff',
         border: '',
+        borderRadius: '5px'
       },
       children: [
         {
@@ -49,12 +50,23 @@ let mind = new MindElixir({
     },
     {
       style: {
-        background: '#e74c3c',
-        color: '#ecf0f1',
-        border: '',
+        background: '#fff',
+        color: '#666',
+        border: '1px dashed #888',
+        borderRadius: '0px'
       },
       text: '条件节点',
       id: 'condition'
+    },
+    {
+      style: {
+        background: '#fff',
+        color: '#f29a66',
+        border: '2px solid #f29a66',
+        borderRadius: '20px'
+      },
+      text: '步骤节点',
+      id: 'bunch'
     },
     {
       style: {

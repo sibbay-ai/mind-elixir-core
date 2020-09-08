@@ -1,4 +1,5 @@
 import vari from '../var'
+import {updateNodeObjStyle} from "../nodeOperation"
 
 export let addParentLink = (data, parent) => {
   data.parent = parent
@@ -129,11 +130,12 @@ export function generateNewTemplateObjs(nodeTemplate, thisNodeObj) {
   }
   findTemplate = findTemplate || nodeTemplate
   for (const cn of findTemplate) {
-    objs.push({
+    let temp = {
       topic: cn.text,
       id: cn.id,
-      style: { color: cn.style.color, background: cn.style.background }
-    })
+    }
+    updateNodeObjStyle(temp, cn)
+    objs.push(temp)
   }
 
   return objs
@@ -152,13 +154,13 @@ export function generateNewTemplateObj(nodeTemplate, templateId) {
       }
     }
   }
-  return {
+  let temp = {
     topic: vari.newTopicName || 'new node',
     id: generateUUID(),
     templateID: templateId,
-    style: { color: findTemplate.style.color, background: findTemplate.style.background },
-    icons: findTemplate.icons || []
   }
+  updateNodeObjStyle(temp, findTemplate)
+  return temp
 }
 
 export function generateNewLink(from, to) {
