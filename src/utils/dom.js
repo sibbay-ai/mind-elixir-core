@@ -31,15 +31,16 @@ export let createTop = function (nodeObj) {
     tpc.style.fontSize = nodeObj.style.fontSize + 'px'
     tpc.style.fontWeight = nodeObj.style.fontWeight || 'normal'
   }
-  if (nodeObj.icons) {
+  if (nodeObj.icons && nodeObj.icons.length > 0) {
     let iconsContainer = $d.createElement('span')
     iconsContainer.className = 'icons'
     iconsContainer.innerHTML = nodeObj.icons
       .map(icon => `<span>${icon}</span>`)
       .join('')
-    tpc.appendChild(iconsContainer)
+    // tpc.appendChild(iconsContainer)
+    tpc.insertBefore(iconsContainer, getTopicDiv(tpc))
   }
-  if (nodeObj.tags) {
+  if (nodeObj.tags && nodeObj.tags.length > 0) {
     let tagsContainer = $d.createElement('div')
     tagsContainer.className = 'tags'
     tagsContainer.innerHTML = nodeObj.tags
@@ -54,9 +55,13 @@ export let createTop = function (nodeObj) {
 export let createTopic = function (nodeObj) {
   let topic = $d.createElement('tpc')
   topic.nodeObj = nodeObj
-  topic.innerHTML = nodeObj.topic.replace(/\n/g, '<br>')
+  let topicDiv = $d.createElement('div')
+  // topic.innerHTML = nodeObj.topic.replace(/\n/g, '<br>')
+  topicDiv.className = 'me-topic'
+  topicDiv.innerHTML = nodeObj.topic.replace(/\n/g, '<br>')
   topic.dataset.nodeid = 'me' + nodeObj.id
   topic.draggable = vari.mevar_draggable
+  topic.appendChild(topicDiv)
   return topic
 }
 
@@ -76,14 +81,15 @@ export function selectText(div) {
 export function createInputDiv(tpc) {
   console.time('createInputDiv')
   if (!tpc) return
+  let originDiv = this.getTopicDiv(tpc)
   let div = $d.createElement('div')
-  let origin = tpc.innerHTML
+  let origin = originDiv.innerHTML
   tpc.appendChild(div)
   div.innerHTML = origin
   div.contentEditable = true
   div.spellcheck = false
-  div.className = 'tpc-inputdiv'
-  div.style.cssText = `min-width:${tpc.offsetWidth - 12}px;min-height:${tpc.offsetHeight - 12}px;color:#2b2b2b;outline:2px solid #4DC4FF;`
+  div.className = 'me-inputdiv'
+  div.style.cssText = `min-width:${originDiv.offsetWidth - 12}px;min-height:${originDiv.offsetHeight - 12}px;color:#2b2b2b;outline:1px solid rgb(204, 204, 204);margin:5px 0;`
   if (this.direction === LEFT) div.style.right = 0
   div.focus()
 
@@ -126,7 +132,7 @@ export function createInputDiv(tpc) {
     })
     if (topic === origin) return // 没有修改不做处理
     // tpc.childNodes[0].textContent = node.topic
-    tpc.innerHTML = node.topic
+    originDiv.innerHTML = node.topic
     this.linkDiv()
   })
   console.timeEnd('createInputDiv')
@@ -221,3 +227,9 @@ export function layout() {
   createChildren(this.nodeData.children, this.box, this.direction)
   console.timeEnd('layout')
 }
+
+export let getTopicDiv = function (el) {
+  const topics = el.getElementsByClassName('me-topic')
+  if (topics.length > 0) return topics[0]
+}
+

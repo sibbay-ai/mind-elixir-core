@@ -1,4 +1,5 @@
 import i18n from '../i18n'
+import {generateNewTemplateObj} from '../utils/index'
 
 export default function(mind) {
   let locale = i18n[mind.locale] ? mind.locale : 'en'
@@ -79,7 +80,7 @@ export default function(mind) {
     <div class="nm-node-template-block" style="">
     <div class="nm-node-template-group">
         ${nodeTemplate.map(template => {
-            return `<div class="nm-node" data-id="${template.id}" style="color: ${template.color}; background: ${template.background}">${template.text}</div>`
+            return `<div class="nm-node" data-id="${template.id}" style="color: ${template.style.color}; background: ${template.style.background}">${template.text}</div>`
         }).join('')}
     </div>
    
@@ -220,21 +221,16 @@ export default function(mind) {
     if (!mind.currentNode) return
     let templateId = e.target.getAttribute('data-id')
 
-    for (const nt of nodeTemplate) {
-      console.log(nt)
-      if (nt.id === templateId) {
-        let nodeObj = mind.currentNode.nodeObj
-        if (nodeObj.style) {
-          nodeObj.style.color = nt.color
-          nodeObj.style.background = nt.background
-        } else {
-          nodeObj.style = {color: nt.color, background: nt.background}
-        }
-
-        mind.updateNodeStyle(nodeObj)
-        break
-      }
+    let templateStyle = generateNewTemplateObj(nodeTemplate, templateId)
+    let nodeObj = mind.currentNode.nodeObj
+    if (nodeObj.style) {
+      nodeObj.style.color = templateStyle.style.color
+      nodeObj.style.background = templateStyle.style.background
+    } else {
+      nodeObj.style = {color: templateStyle.style.color, background: templateStyle.style.background}
     }
+
+    mind.updateNodeStyle(nodeObj)
 
   }
   tagInput.onchange = e => {

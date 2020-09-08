@@ -15,37 +15,62 @@ let mind = new MindElixir({
   builtInTags: ['tag1', 'tag2', 'tag3', 'tag4', 'tag5'],
   nodeTemplate: [
     {
-      background: '#f39c11',
-      color: '#ecf0f1',
-      border: '',
-      text: '选项节点',
-      id: 'choice'
-    },
-    {
-      background: '#27ae61',
-      color: '#ecf0f1',
-      border: '',
+      style: {
+        background: '#27ae61',
+        color: '#ecf0f1',
+        border: '',
+      },
+      children: [
+        {
+          style: {
+            background: '#f39c11',
+            color: '#ecf0f1',
+            border: '',
+          },
+          children: [],
+          text: '普通选项',
+          icons: ['🟠'],
+          id: '1choice'
+        },
+        {
+          style: {
+            background: '#f39c11',
+            color: '#ecf0f1',
+            border: '',
+          },
+          children: [],
+          text: '文字输入',
+          icons: ['🖊️'],
+          id: '2choice'
+        }
+      ],
       text: '文字节点',
       id: 'show'
     },
     {
-      background: '#e74c3c',
-      color: '#ecf0f1',
-      border: '',
+      style: {
+        background: '#e74c3c',
+        color: '#ecf0f1',
+        border: '',
+      },
       text: '条件节点',
       id: 'condition'
     },
     {
-      background: '#34495e',
-      color: '#ecf0f1',
-      border: '',
+      style: {
+        background: '#34495e',
+        color: '#ecf0f1',
+        border: '',
+      },
       text: '代码节点',
       id: 'code'
     },
     {
-      background: '#9b59b6',
-      color: '#ecf0f1',
-      border: '',
+      style: {
+        background: '#9b59b6',
+        color: '#ecf0f1',
+        border: '',
+      },
       text: '延时节点',
       id: 'wait'
     }
