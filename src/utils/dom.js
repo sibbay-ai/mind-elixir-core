@@ -1,5 +1,6 @@
 import { LEFT, RIGHT, SIDE } from '../const'
 import vari from '../var'
+import {updateNodeStyleWithNode} from '../nodeOperation'
 
 // DOM manipulation
 let $d = document
@@ -26,10 +27,7 @@ export let createTop = function (nodeObj) {
   let tpc = createTopic(nodeObj)
   // TODO allow to add online image
   if (nodeObj.style) {
-    tpc.style.color = nodeObj.style.color
-    tpc.style.background = nodeObj.style.background
-    tpc.style.fontSize = nodeObj.style.fontSize + 'px'
-    tpc.style.fontWeight = nodeObj.style.fontWeight || 'normal'
+    updateNodeStyleWithNode(tpc, nodeObj)
   }
   if (nodeObj.icons && nodeObj.icons.length > 0) {
     let iconsContainer = $d.createElement('span')

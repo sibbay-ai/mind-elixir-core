@@ -9,10 +9,11 @@ import {
   moveUpObj,
   moveDownObj,
   generateNewTemplateObjs,
-  generateNewTemplateObj,
+  generateNewTemplateObj, generateUUID,
 } from './utils/index'
 import { findEle, createExpander, createGroup } from './utils/dom'
 import { LEFT, RIGHT, SIDE } from './const'
+import vari from "./var";
 let $d = document
 /**
  * @namespace NodeOperation
@@ -20,11 +21,29 @@ let $d = document
 export let updateNodeStyle = function (object) {
   if (!object.style) return
   let nodeEle = findEle(object.id)
-  nodeEle.style.color = object.style.color
-  nodeEle.style.background = object.style.background
-  nodeEle.style.fontSize = object.style.fontSize + 'px'
-  nodeEle.style.fontWeight = object.style.fontWeight || 'normal'
+  updateNodeStyleWithNode(nodeEle, object)
   this.linkDiv()
+}
+
+export let updateNodeStyleWithNode = function (node, object) {
+  node.style.color = object.style.color
+  node.style.background = object.style.background
+  node.style.fontSize = object.style.fontSize + 'px'
+  node.style.fontWeight = object.style.fontWeight || 'normal'
+  if (object.style.border) node.style.border = object.style.border
+  if (object.style.borderRadius) node.style.borderRadius = object.style.borderRadius
+}
+
+export let updateNodeObjStyle = function (nodeObj, upd) {
+  if (nodeObj.style) {
+    nodeObj.style.color = upd.style.color
+    nodeObj.style.background = upd.style.background
+  } else {
+    nodeObj.style = {color: upd.style.color, background: upd.style.background}
+  }
+  if (upd.style.border) nodeObj.style.border = upd.style.border
+  if (upd.style.borderRadius) nodeObj.style.borderRadius = upd.style.borderRadius
+  if (upd.icons) nodeObj.icons = upd.icons
 }
 
 export let updateNodeTags = function (object) {
