@@ -76,10 +76,18 @@ export default function(mind) {
     </div>
   `
 
+  function getAllNodeTemplate(t, r) {
+    for (const tElement of t) {
+      r.push(tElement)
+      getAllNodeTemplate(tElement.children || [], r)
+    }
+    return r
+  }
+
   let nodeTemplateHTML = `
     <div class="nm-node-template-block" style="">
     <div class="nm-node-template-group">
-        ${nodeTemplate.map(template => {
+        ${getAllNodeTemplate(nodeTemplate, []).map(template => {
             return `<div class="nm-node" 
                          data-id="${template.id}" 
                          style="
