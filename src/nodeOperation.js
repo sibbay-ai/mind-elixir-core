@@ -11,7 +11,7 @@ import {
   generateNewTemplateObjs,
   generateNewTemplateObj, generateUUID,
 } from './utils/index'
-import { findEle, createExpander, createGroup } from './utils/dom'
+import {findEle, createExpander, createGroup, getTopicDiv} from './utils/dom'
 import { LEFT, RIGHT, SIDE } from './const'
 import vari from "./var";
 let $d = document
@@ -22,6 +22,20 @@ export let updateNodeStyle = function (object) {
   if (!object.style) return
   let nodeEle = findEle(object.id)
   updateNodeStyleWithNode(nodeEle, object)
+  if (object.icons) {
+    let icons = object.icons
+    let iconsEl = nodeEle.querySelector('.icons')
+    if (iconsEl) {
+      iconsEl.innerHTML = icons.map(icon => `<span>${icon}</span>`).join('')
+    } else {
+      let iconsContainer = $d.createElement('span')
+      iconsContainer.className = 'icons'
+      iconsContainer.innerHTML = icons
+          .map(icon => `<span>${icon}</span>`)
+          .join('')
+      nodeEle.insertBefore(iconsContainer, getTopicDiv(nodeEle))
+    }
+  }
   this.linkDiv()
 }
 
