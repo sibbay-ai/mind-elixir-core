@@ -155,7 +155,7 @@ export function generateNewTemplateObj(nodeTemplate, templateId) {
     }
   }
   let temp = {
-    topic: vari.newTopicName || 'new node',
+    topic: findTemplate.text || 'new node',
     id: generateUUID(),
     templateID: templateId,
   }
