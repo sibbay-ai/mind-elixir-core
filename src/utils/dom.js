@@ -87,7 +87,7 @@ export function createInputDiv(tpc) {
   div.contentEditable = true
   div.spellcheck = false
   div.className = 'me-inputdiv'
-  div.style.cssText = `min-width:${originDiv.offsetWidth - 12}px;min-height:${originDiv.offsetHeight - 12}px;color:#2b2b2b;outline:1px solid rgb(204, 204, 204);margin:5px 0;`
+  div.style.cssText = `min-width:${originDiv.parentElement.offsetWidth - 12}px;min-height:${originDiv.parentElement.offsetHeight - 12}px;color:#2b2b2b;outline:1px solid rgb(204, 204, 204);margin:5px 0;`
   if (this.direction === LEFT) div.style.right = 0
   div.focus()
 
