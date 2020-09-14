@@ -46,6 +46,7 @@ export let updateNodeStyleWithNode = function (node, object) {
   node.style.fontWeight = object.style.fontWeight || 'normal'
   if (object.style.border) node.style.border = object.style.border
   if (object.style.borderRadius) node.style.borderRadius = object.style.borderRadius
+  if (object.templateID) node.templateID = object.templateID
 }
 
 export let updateNodeObjStyle = function (nodeObj, upd) {
@@ -58,6 +59,7 @@ export let updateNodeObjStyle = function (nodeObj, upd) {
   if (upd.style.border) nodeObj.style.border = upd.style.border
   if (upd.style.borderRadius) nodeObj.style.borderRadius = upd.style.borderRadius
   if (upd.icons) nodeObj.icons = upd.icons
+  if (upd.templateID) nodeObj.templateID = upd.templateID
 }
 
 export let updateNodeTags = function (object) {

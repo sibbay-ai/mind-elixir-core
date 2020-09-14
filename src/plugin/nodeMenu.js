@@ -76,10 +76,13 @@ export default function(mind) {
     </div>
   `
 
-  function getAllNodeTemplate(t, r) {
+  function getAllNodeTemplate(t, r, l=[]) {
     for (const tElement of t) {
-      r.push(tElement)
-      getAllNodeTemplate(tElement.children || [], r)
+      if (l.indexOf(tElement.id) === -1) {
+        r.push(tElement)
+        l.push(tElement.id)
+      }
+      getAllNodeTemplate(tElement.children || [], r, l)
     }
     return r
   }
