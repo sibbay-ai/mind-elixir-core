@@ -121,7 +121,10 @@ export function generateNewObj() {
 }
 
 export function generateNewTemplateObjs(nodeTemplate, thisNodeObj) {
-  let objs = [generateNewObj()]
+  let objs = [{
+    topic: vari.newTopicName || 'new node',
+    id: 'normal'
+  }]
   let thisNodeTemplateID = thisNodeObj.templateID
   let findTemplate
   for (const nte of nodeTemplate) {
@@ -143,6 +146,7 @@ export function generateNewTemplateObjs(nodeTemplate, thisNodeObj) {
 
 export function generateNewTemplateObj(nodeTemplate, templateId) {
   let findTemplate = generateNewObj()
+  findTemplate.id = 'normal'
   for (const nte of nodeTemplate) {
     if (nte.id === templateId) {
       findTemplate = nte
@@ -155,7 +159,7 @@ export function generateNewTemplateObj(nodeTemplate, templateId) {
     }
   }
   let temp = {
-    topic: findTemplate.text || 'new node',
+    topic: findTemplate.text || findTemplate.topic || vari.newTopicName || 'new node',
     id: generateUUID(),
     templateID: templateId,
   }
