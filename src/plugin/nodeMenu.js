@@ -90,7 +90,9 @@ export default function(mind) {
   let nodeTemplateHTML = `
     <div class="nm-node-template-block" style="">
     <div class="nm-node-template-group">
-        ${getAllNodeTemplate(nodeTemplate, []).map(template => {
+        ${getAllNodeTemplate(nodeTemplate, [{
+          id: 'normal', style: {color: 'rgb(102, 102, 102)', background: ''}, text: i18n[locale].defaultNodeTemplate
+        }]).map(template => {
             return `<div class="nm-node" 
                          data-id="${template.id}" 
                          style="

@@ -50,14 +50,19 @@ export let updateNodeStyleWithNode = function (node, object) {
 }
 
 export let updateNodeObjStyle = function (nodeObj, upd) {
-  if (nodeObj.style) {
-    nodeObj.style.color = upd.style.color
-    nodeObj.style.background = upd.style.background
+  console.log(upd)
+  if (upd.style) {
+    if (nodeObj.style) {
+      nodeObj.style.color = upd.style.color
+      nodeObj.style.background = upd.style.background
+    } else {
+      nodeObj.style = {color: upd.style.color, background: upd.style.background}
+    }
+    if (upd.style.border) nodeObj.style.border = upd.style.border
+    if (upd.style.borderRadius) nodeObj.style.borderRadius = upd.style.borderRadius
   } else {
-    nodeObj.style = {color: upd.style.color, background: upd.style.background}
+    nodeObj.style = {color: '', background: ''}
   }
-  if (upd.style.border) nodeObj.style.border = upd.style.border
-  if (upd.style.borderRadius) nodeObj.style.borderRadius = upd.style.borderRadius
   if (upd.icons) nodeObj.icons = upd.icons
   if (upd.templateID) nodeObj.templateID = upd.templateID
 }
