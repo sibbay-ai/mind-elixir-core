@@ -100,7 +100,10 @@ export default function(mind) {
                             background: ${template.style.background}; 
                             border: ${template.style.border || ''}; 
                             border-radius: ${template.style.borderRadius || '0px'}
-                         ">${template.text}</div>`
+                         ">
+                    ${template.icons ? `<span>${template.icons[template.icons.length-1]}</span>` : ''}
+                    ${template.text}
+                    </div>`
         }).join('')}
     </div>
    

@@ -40,7 +40,7 @@ let mind = new MindElixir({
           },
           children: [],
           text: '单选节点',
-          icons: ['📩️'],
+          icons: ['➊'],
           id: 'single_choice'
         },
         {
@@ -51,7 +51,7 @@ let mind = new MindElixir({
           },
           children: [],
           text: '单选任务',
-          icons: ['📩️', '🕑', '🌲️'],
+          icons: ['➊', '🕑', '🌲️'],
           id: 'single_task_choice'
         },
         {
@@ -62,7 +62,7 @@ let mind = new MindElixir({
           },
           children: [],
           text: '多选节点',
-          icons: ['📨️'],
+          icons: ['☑'],
           id: 'multi_choice'
         },
         {
@@ -73,7 +73,7 @@ let mind = new MindElixir({
           },
           children: [],
           text: '继续节点',
-          icons: ['💨️'],
+          icons: ['►'],
           id: 'continue'
         },
         {
@@ -84,7 +84,7 @@ let mind = new MindElixir({
           },
           children: [],
           text: '语音输入',
-          icons: ['🖊'],
+          icons: ['🔊'],
           id: 'voice_input'
         },
         {
@@ -95,7 +95,7 @@ let mind = new MindElixir({
           },
           children: [],
           text: '语音文字',
-          icons: ['✏'],
+          icons: ['📝'],
           id: 'voice_text_input'
         },
         {
@@ -139,7 +139,7 @@ let mind = new MindElixir({
           },
           children: [],
           text: '能量节点',
-          icons: ['🧧'],
+          icons: ['🔆'],
           id: 'energy'
         }
       ],
@@ -182,7 +182,7 @@ let mind = new MindElixir({
         color: '#434b54',
         borderRadius: '6px'
       },
-      text: '业务节点(D)',
+      text: '代码节点(D)',
       id: 'code_design'
     },
     {

@@ -45,12 +45,13 @@ export let updateNodeStyleWithNode = function (node, object) {
   node.style.fontSize = object.style.fontSize + 'px'
   node.style.fontWeight = object.style.fontWeight || 'normal'
   if (object.style.border) node.style.border = object.style.border
+  else node.style.border = 'none'
   if (object.style.borderRadius) node.style.borderRadius = object.style.borderRadius
+  else node.style.borderRadius = '0px'
   if (object.templateID) node.templateID = object.templateID
 }
 
 export let updateNodeObjStyle = function (nodeObj, upd) {
-  console.log(upd)
   if (upd.style) {
     if (nodeObj.style) {
       nodeObj.style.color = upd.style.color
@@ -59,7 +60,9 @@ export let updateNodeObjStyle = function (nodeObj, upd) {
       nodeObj.style = {color: upd.style.color, background: upd.style.background}
     }
     if (upd.style.border) nodeObj.style.border = upd.style.border
+    else nodeObj.style.border = 'none'
     if (upd.style.borderRadius) nodeObj.style.borderRadius = upd.style.borderRadius
+    else nodeObj.style.borderRadius = '0px'
   } else {
     nodeObj.style = {color: '', background: ''}
   }
