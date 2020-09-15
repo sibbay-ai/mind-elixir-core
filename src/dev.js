@@ -50,8 +50,8 @@ let mind = new MindElixir({
             border: '',
           },
           children: [],
-          text: '单选任务',
-          icons: ['➊', '🕑', '🌲️'],
+          text: '动画单选',
+          icons: ['🔮'],
           id: 'single_task_choice'
         },
         {
@@ -84,7 +84,7 @@ let mind = new MindElixir({
           },
           children: [],
           text: '语音输入',
-          icons: ['🔊'],
+          icons: ['🔉'],
           id: 'voice_input'
         },
         {
@@ -106,7 +106,7 @@ let mind = new MindElixir({
           },
           children: [],
           text: '文字输入',
-          icons: ['🖌'],
+          icons: ['✏️'],
           id: 'text_input'
         },
         {

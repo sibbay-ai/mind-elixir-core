@@ -36,15 +36,20 @@ export default function (mind) {
     e.preventDefault()
     if (!mind.editable) return
     if (
+      e.target.parentElement.parentElement.parentElement.nodeName === 'T' ||
+      e.target.parentElement.parentElement.parentElement.nodeName === 'ROOT'
+    ) {
+      mind.beginEdit(e.target.parentElement.parentElement)
+    } else if (
       e.target.parentElement.parentElement.nodeName === 'T' ||
       e.target.parentElement.parentElement.nodeName === 'ROOT'
     ) {
       mind.beginEdit(e.target.parentElement)
     } else if (
-      e.target.parentElement.parentElement.parentElement.nodeName === 'T' ||
-      e.target.parentElement.parentElement.parentElement.nodeName === 'ROOT'
+      e.target.parentElement.nodeName === 'T' ||
+      e.target.parentElement.nodeName === 'ROOT'
     ) {
-      mind.beginEdit(e.target.parentElement.parentElement)
+      mind.beginEdit(e.target)
     }
   })
 

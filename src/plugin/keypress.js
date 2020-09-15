@@ -109,13 +109,21 @@ export default function (mind) {
       })
       return
     }
-    e.preventDefault()
     if (e.keyCode === 8 || e.keyCode === 46) {
       // del,backspace
+      e.preventDefault()
       if (mind.currentLink) mind.removeLink()
       else mind.removeNode()
     } else {
-      key2func[e.keyCode] && key2func[e.keyCode](e)
+      if (key2func[e.keyCode]) {
+        e.preventDefault()
+        key2func[e.keyCode](e)
+        return
+      }
+      if (!mind.currentNode) return
+      if (e.shiftKey || e.ctrlKey || e.metaKey) return
+      mind.createInputDiv(mind.currentNode)
+      e.stopPropagation()
     }
   }
 }
