@@ -100,11 +100,12 @@ export let updateNodeIcons = function (object) {
       .map(icon => `<span>${icon}</span>`)
       .join('')
     // fixed sequence: text -> icons -> tags
-    if (nodeEle.lastChild.className === 'tags') {
-      nodeEle.insertBefore(iconsContainer, nodeEle.lastChild)
-    } else {
-      nodeEle.appendChild(iconsContainer)
-    }
+    // if (nodeEle.lastChild.className === 'tags') {
+    //   nodeEle.insertBefore(iconsContainer, nodeEle.lastChild)
+    // } else {
+    //   nodeEle.appendChild(iconsContainer)
+    // }
+    nodeEle.insertBefore(iconsContainer, getTopicDiv(nodeEle))
   }
   this.linkDiv()
 }

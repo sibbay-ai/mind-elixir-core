@@ -119,8 +119,9 @@ export function createInputDiv(tpc) {
     if (!div) return // 防止重复blur
     let node = tpc.nodeObj
     let topic = div.innerHTML
-    if (topic === '') node.topic = origin
-    else node.topic = topic
+    // if (topic === '') node.topic = origin
+    // else node.topic = topic
+    node.topic = topic
     div.remove()
     this.inputDiv = div = null
     this.bus.fire('operation', {
