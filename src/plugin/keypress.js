@@ -1,16 +1,28 @@
+export let withctrl = function (e) {
+  if ((navigator.platform === "Win32") || (navigator.platform === "Windows")) return e.ctrlKey
+  if ((navigator.platform === "Mac68K") || (navigator.platform === "MacPPC") || (navigator.platform === "Macintosh") || (navigator.platform === "MacIntel")) return e.metaKey
+  return false
+}
+
+export let isctrl = function (e) {
+  if ((navigator.platform === "Win32") || (navigator.platform === "Windows")) return e.keyCode === 17
+  if ((navigator.platform === "Mac68K") || (navigator.platform === "MacPPC") || (navigator.platform === "Macintosh") || (navigator.platform === "MacIntel")) return e.keyCode === 91
+  return false
+}
+
 export default function (mind) {
   let selectChildNodeTemplate = false
   let selectSiblingNodeTemplate = false
   let key2func = {
     13: (e) => {
       // ctrl enter
-      if (e.ctrlKey && !e.shiftKey) {
+      if (withctrl(e) && !e.shiftKey) {
         mind.choiceNewNodeTemplate(mind.currentNode.parentElement.parentNode.parentNode.previousSibling.childNodes[0])
         selectSiblingNodeTemplate = true
         return
       }
       // ctrl shift enter
-      if (e.ctrlKey && e.shiftKey) {
+      if (withctrl(e) && e.shiftKey) {
         mind.choiceNewNodeTemplate(mind.currentNode.parentElement.parentNode.parentNode.previousSibling.childNodes[0], 'up')
         selectSiblingNodeTemplate = true
         return
@@ -61,27 +73,27 @@ export default function (mind) {
     // ctrl z
     90: e => {
       if (!mind.allowUndo) return
-      if (e.metaKey || e.ctrlKey) mind.undo()
+      if (e.metaKey || withctrl(e)) mind.undo()
     },
     // ctrl .
     190: e => {
-      if (!e.ctrlKey) return
+      if (!withctrl(e)) return
       mind.choiceNewNodeTemplate()
       selectChildNodeTemplate = true
     },
     // ctrl ,
     188: e => {
-      if (!e.ctrlKey) return
+      if (!withctrl(e)) return
       mind.choiceNewNodeTemplate(null, 'up')
       selectChildNodeTemplate = true
     }
   }
   mind.map.onkeyup = e => {
-    if (e.keyCode === 17 && selectChildNodeTemplate) {
+    if (isctrl(e) && selectChildNodeTemplate) {
       mind.clearNodeTemplate()
       selectChildNodeTemplate = false
     }
-    if (e.keyCode === 17 && selectSiblingNodeTemplate) {
+    if (isctrl(e) && selectSiblingNodeTemplate) {
       mind.clearNodeTemplate(mind.currentNode.parentElement.parentNode.parentNode.previousSibling.childNodes[0])
       selectSiblingNodeTemplate = false
     }
