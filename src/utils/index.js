@@ -255,6 +255,29 @@ export function moveNodeObj(from, to) {
   else to.children = [from]
 }
 
+export function parseNodeObj(from, to, type) {
+  console.log(from, to, type)
+  if (type === 'copy') {
+    from = copyObj(from)
+  } else if (type === 'cut') {
+    removeNodeObj(from)
+  } else console.warn('not allow parse type')
+  if (to.children) to.children.push(from)
+  else to.children = [from]
+}
+
+export function copyObj(obj) {
+  let newObj = Object.assign({}, obj)
+  newObj.id = generateUUID()
+  newObj.parent = undefined
+  if (newObj.children && newObj.children.length > 0) {
+    newObj.children = newObj.children.map((o) => {
+      return copyObj(o)
+    })
+  }
+  return newObj
+}
+
 export let dragMoveHelper = {
   afterMoving: false, // 区别click事件
   mousedown: false,

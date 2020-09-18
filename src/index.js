@@ -24,6 +24,8 @@ import {
   enableEdit,
   disableEdit,
   expandNode,
+  copyNode,
+  cutNode
 } from './interact'
 import {
   insertSibling,
@@ -42,6 +44,7 @@ import {
   setNodeTopic,
   choiceNewNodeTemplate,
   clearNodeTemplate,
+  parseNode
 } from './nodeOperation'
 import {
   createLink,
@@ -107,6 +110,7 @@ function MindElixir({
   contextMenuOption,
   toolBar,
   nodeMenu,
+  nodeMenuDefaultState,
   keypress,
   before,
   newTopicName,
@@ -126,6 +130,7 @@ function MindElixir({
   this.contextMenu = contextMenu === undefined ? true : contextMenu
   this.toolBar = toolBar === undefined ? true : toolBar
   this.nodeMenu = nodeMenu === undefined ? true : nodeMenu
+  this.nodeMenuDefaultState = nodeMenuDefaultState === undefined ? 'open' : nodeMenuDefaultState
   this.keypress = keypress === undefined ? true : keypress
   // record the direction before enter focus mode, must true in focus mode, reset to null after exit focus
   this.direction = typeof direction === 'number' ? direction : 1
@@ -142,6 +147,7 @@ function MindElixir({
   this.bus = new Bus()
   this.scaleVal = 1
   this.tempDir = null
+  this.clipboard = null // copy/cut
 
   this.isUndo = false
   this.bus.addListener('operation', operation => {
@@ -277,6 +283,9 @@ MindElixir.prototype = {
   enableEdit,
   disableEdit,
   expandNode,
+  copyNode,
+  cutNode,
+  parseNode,
 
   init: function () {
     /**

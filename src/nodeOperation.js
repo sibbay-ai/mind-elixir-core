@@ -9,11 +9,11 @@ import {
   moveUpObj,
   moveDownObj,
   generateNewTemplateObjs,
-  generateNewTemplateObj, generateUUID,
+  generateNewTemplateObj,
+  copyObj
 } from './utils/index'
 import {findEle, createExpander, createGroup, getTopicDiv} from './utils/dom'
 import { LEFT, RIGHT, SIDE } from './const'
-import vari from "./var";
 let $d = document
 /**
  * @namespace NodeOperation
@@ -23,7 +23,7 @@ export let updateNodeStyle = function (object) {
   let nodeEle = findEle(object.id)
   updateNodeStyleWithNode(nodeEle, object)
   if (object.icons) {
-    let icons = object.icons
+    let icons = object.icons || []
     let iconsEl = nodeEle.querySelector('.icons')
     if (iconsEl) {
       iconsEl.innerHTML = icons.map(icon => `<span>${icon}</span>`).join('')
@@ -67,6 +67,7 @@ export let updateNodeObjStyle = function (nodeObj, upd) {
     nodeObj.style = {color: '', background: ''}
   }
   if (upd.icons) nodeObj.icons = upd.icons
+  else nodeObj.icon = []
   if (upd.templateID) nodeObj.templateID = upd.templateID
 }
 
@@ -531,7 +532,9 @@ export let clearNodeTemplate = function (el) {
 }
 
 export let setNodeTopic = function (tpc, topic) {
-  tpc.childNodes[0].textContent = topic
+  // tpc.childNodes[0].innerHTML = topic
+  this.getTopicDiv(tpc).innerHTML = topic
+  tpc.nodeObj.topic = topic
   this.linkDiv()
 }
 
@@ -552,4 +555,31 @@ export function processPrimaryNode(primaryNode, obj) {
       obj.direction = RIGHT
     }
   }
+}
+
+export let parseNode = function () {
+  if (!this.currentNode) return
+  let clipboard = localStorage.getItem('mind_clipboard')
+  if (!clipboard) return
+  clipboard = JSON.parse(clipboard)
+  console.time('parseNode')
+  // TODO clipboard.ids[0]
+  let fromE = findEle(clipboard.ids[0])
+  let fromObj = fromE.nodeObj
+  let toObj = this.currentNode.nodeObj
+  if (toObj.expanded === false) {
+    console.warn('Target node must be expanded')
+    return
+  }
+  if (clipboard.type === 'copy') {
+    this.addChild(this.currentNode, copyObj(fromObj))
+  }
+  if (clipboard.type === 'cut') {
+    this.moveNode(fromE, this.currentNode)
+  }
+  console.timeEnd('parseNode')
+  this.bus.fire('operation', {
+    name: 'parseNode',
+    obj: {fromObj, toObj, clipboard},
+  })
 }
