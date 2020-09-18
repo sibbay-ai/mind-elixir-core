@@ -70,6 +70,21 @@ export default function (mind) {
       // pageDown
       mind.moveDownNode()
     },
+    67: e => {
+      // ctrl c
+      if (!withctrl(e)) return
+      mind.copyNode()
+    },
+    86: e => {
+      // ctrl v
+      if (!withctrl(e)) return
+      mind.parseNode()
+    },
+    88: e => {
+      // ctrl x
+      if (!withctrl(e)) return
+      mind.cutNode()
+    },
     // ctrl z
     90: e => {
       if (!mind.allowUndo) return
@@ -92,14 +107,19 @@ export default function (mind) {
     if (isctrl(e) && selectChildNodeTemplate) {
       mind.clearNodeTemplate()
       selectChildNodeTemplate = false
+      return
     }
     if (isctrl(e) && selectSiblingNodeTemplate) {
       mind.clearNodeTemplate(mind.currentNode.parentElement.parentNode.parentNode.previousSibling.childNodes[0])
       selectSiblingNodeTemplate = false
+      return
     }
+    mind.bus.fire('operation', {
+      name: 'mapKeypressUp',
+      obj: e,
+    })
   }
   mind.map.onkeydown = e => {
-    console.log(e, e.target, e.currentTarget)
     if (e.target !== e.currentTarget) {
       // input
       // send all key for user define
@@ -109,6 +129,10 @@ export default function (mind) {
       })
       return
     }
+    mind.bus.fire('operation', {
+      name: 'mapKeypress',
+      obj: e,
+    })
     if (e.keyCode === 8 || e.keyCode === 46) {
       // del,backspace
       e.preventDefault()

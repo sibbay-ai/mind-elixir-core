@@ -196,6 +196,7 @@ let mind = new MindElixir({
       id: 'bunch'
     }
   ],
+  nodeMenuDefaultState: 'close',
   contextMenuOption: {
     focus: true,
     link: true,

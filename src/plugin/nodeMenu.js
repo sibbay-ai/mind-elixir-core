@@ -33,6 +33,8 @@ export default function(mind) {
     '#2ecc71',
   ]
 
+  let fontSizeList = ['15', '24', '32']
+
   let nodeTemplate = mind.nodeTemplate
 
   let builtInTags = mind.builtInTags
@@ -50,7 +52,7 @@ export default function(mind) {
     <div class="nm-style-block" style="display: none">
     ${i18n[locale].font}
     <div class="nm-fontsize-container">
-        ${['15', '24', '32'].map(size => {
+        ${fontSizeList.map(size => {
       return `<div class="size"  data-size="${size}">
             <svg class="icon" style="width: ${size}px;height: ${size}px" aria-hidden="true">
               <use xlink:href="#icon-a"></use>
@@ -132,13 +134,26 @@ export default function(mind) {
   blockDiv.innerHTML = headHTML + styleHTML + nodeTemplateHTML + tagHTML + iconHTML
 
   let menuContainer = document.createElement('nmenu')
-  menuContainer.innerHTML = `
-  <div class="button-container">
-  <svg class="icon" aria-hidden="true">
-  <use xlink:href="#icon-close"></use>
-  </svg>
-  </div>
-  `
+
+  if (mind.nodeMenuDefaultState === 'open') {
+    menuContainer.innerHTML = `
+    <div class="button-container">
+    <svg class="icon" aria-hidden="true">
+    <use xlink:href="#icon-close"></use>
+    </svg>
+    </div>
+    `
+  } else {
+    menuContainer.innerHTML = `
+    <div class="button-container">
+    <svg class="icon" aria-hidden="true">
+      <use xlink:href="#icon-menu"></use>
+    </svg>
+    </div>
+    `
+    menuContainer.className = 'close'
+  }
+
   menuContainer.appendChild(blockDiv)
   menuContainer.hidden = true
 
@@ -285,7 +300,7 @@ export default function(mind) {
     mind.currentNode.nodeObj.icons = e.target.value.split(',')
     mind.updateNodeIcons(mind.currentNode.nodeObj)
   }
-  let state = 'open'
+  let state = mind.nodeMenuDefaultState
   buttonContainer.onclick = e => {
     if (state === 'open') {
       state = 'close'
@@ -311,7 +326,7 @@ export default function(mind) {
     clearSelect('.bold', 'size-selected')
     resetButtonStatus('node-template')
     if (nodeObj.style) {
-      if (nodeObj.style.fontSize)
+      if (nodeObj.style.fontSize && fontSizeList.indexOf(nodeObj.style.fontSize) !== -1)
         menuContainer.querySelector(
           '.size[data-size="' + nodeObj.style.fontSize + '"]'
         ).className = 'size size-selected'

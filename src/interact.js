@@ -305,3 +305,19 @@ export let expandNode = function (el, isExpand) {
   this.layout()
   this.linkDiv()
 }
+
+export let copyNode = function () {
+  if (!this.currentNode) return
+  localStorage.setItem('mind_clipboard', JSON.stringify({
+    ids: [this.currentNode.nodeObj.id],
+    type: 'copy'
+  }))
+}
+
+export let cutNode = function () {
+  if (!this.currentNode) return
+  localStorage.setItem('mind_clipboard', JSON.stringify({
+    ids: [this.currentNode.nodeObj.id],
+    type: 'cut'
+  }))
+}
