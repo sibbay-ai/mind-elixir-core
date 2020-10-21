@@ -67,7 +67,7 @@ export let updateNodeObjStyle = function (nodeObj, upd) {
     nodeObj.style = {color: '', background: ''}
   }
   if (upd.icons) nodeObj.icons = upd.icons
-  else nodeObj.icon = []
+  else nodeObj.icons = []
   if (upd.templateID) nodeObj.templateID = upd.templateID
 }
 

@@ -39,6 +39,17 @@ export default function (mind) {
   mind.map.addEventListener('drag',function (event) {
     clearPreview(meet)
     let topMeet = $d.elementFromPoint(event.clientX, event.clientY - (event.target.clientHeight / 2))
+    // let testPointer = $d.createElement('div')
+    // testPointer.style.height = '10px'
+    // testPointer.style.width = '10px'
+    // testPointer.style.backgroundColor = '#000000'
+    // testPointer.style.position = 'absolute'
+    // testPointer.style.zIndex  = '1000'
+    // testPointer.style.left = event.clientX + 'px'
+    // testPointer.style.top = event.clientY + (event.target.clientHeight / 2) + 'px'
+    // $d.body.appendChild(testPointer)
+    // console.log($d.elementFromPoint(event.clientX, event.clientY - (event.target.clientHeight / 2)))
+    // console.log($d.elementFromPoint(event.clientX, event.clientY + (event.target.clientHeight / 2)))
     if (canPreview(topMeet, dragged)) {
       meet = topMeet
       // if else
