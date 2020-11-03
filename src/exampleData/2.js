@@ -98,7 +98,9 @@ export default {
               { topic: 'svg.topiclinks', id: '3390751acbdbdb9f' },
             ],
           },
-          { topic: 'cmenu', id: '33905f95aeab942d' },
+          { topic: 'cmenu', id: '33905f95aeab942d', image: {
+            url: 'https://sibbay-public-test.oss-cn-hangzhou.aliyuncs.com/creation/image/5fa05025c7a1401f16313cb8.png', w: 533, h: 300
+          } },
           { topic: 'toolbar.rb', id: '339060ac0343f0d7' },
           { topic: 'toolbar.lt', id: '3390622b29323de9' },
           { topic: 'nmenu', id: '3390645e6d7c2b4e' },

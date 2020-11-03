@@ -6,6 +6,8 @@ import { createLinkSvg, createLine } from './utils/svg'
 import {
   selectNode,
   unselectNode,
+  selectImg,
+  unselectImg,
   selectNextSibling,
   selectPrevSibling,
   selectFirstChild,
@@ -40,6 +42,7 @@ import {
   updateNodeObjStyle,
   updateNodeTags,
   updateNodeIcons,
+  updateNodeImage,
   processPrimaryNode,
   setNodeTopic,
   choiceNewNodeTemplate,
@@ -117,6 +120,7 @@ function MindElixir({
   allowUndo,
   builtInTags,
   nodeTemplate,
+  imageUploadURL
 }) {
   vari.newTopicName = newTopicName
   this.mindElixirBox = document.querySelector(el)
@@ -139,10 +143,12 @@ function MindElixir({
   this.allowUndo = allowUndo === undefined ? true : allowUndo
   this.builtInTags = builtInTags || []
   this.nodeTemplate = nodeTemplate || []
+  this.imageUploadURL = imageUploadURL || ''
   this.parentMap = {} // deprecate?
 
   this.currentNode = null // the selected <tpc/> element
   this.currentLink = null // the selected link svg element
+  this.currentImg = null
   this.inputDiv = null // editor
   this.bus = new Bus()
   this.scaleVal = 1
@@ -249,6 +255,7 @@ MindElixir.prototype = {
   updateNodeObjStyle,
   updateNodeTags,
   updateNodeIcons,
+  updateNodeImage,
   processPrimaryNode,
   setNodeTopic,
 
@@ -265,6 +272,8 @@ MindElixir.prototype = {
 
   selectNode,
   unselectNode,
+  selectImg,
+  unselectImg,
   selectNextSibling,
   selectPrevSibling,
   selectFirstChild,

@@ -12,7 +12,7 @@ import {
   generateNewTemplateObj,
   copyObj
 } from './utils/index'
-import {findEle, createExpander, createGroup, getTopicDiv} from './utils/dom'
+import {findEle, createExpander, createGroup, getTopicDiv, getIconsSpan} from './utils/dom'
 import { LEFT, RIGHT, SIDE } from './const'
 let $d = document
 /**
@@ -109,6 +109,23 @@ export let updateNodeIcons = function (object) {
     nodeEle.insertBefore(iconsContainer, getTopicDiv(nodeEle))
   }
   this.linkDiv()
+}
+
+export let updateNodeImage = function (object) {
+  if (!object.image || !object.image.url) return
+  let nodeEle = findEle(object.id)
+  let imgURL = object.image.url
+  let imageEL = nodeEle.querySelector('.image')
+  if (imageEL) {
+    imageEL.innerHTML = `<img class="topic-img" src="${imgURL}" style="width: ${object.image.w}px;height: ${object.image.h}px" alt=""/>`
+  } else {
+    let imageContainer = $d.createElement('div')
+    imageContainer.className = 'image'
+    imageContainer.innerHTML = `<img class="topic-img" src="${imgURL}" style="width: ${object.image.w}px;height: ${object.image.h}px" alt=""/>`
+    let iconsSpan = getIconsSpan(nodeEle)
+    if (iconsSpan) nodeEle.insertBefore(imageContainer, iconsSpan)
+    else nodeEle.insertBefore(imageContainer, getTopicDiv(nodeEle))
+  }
 }
 
 export let updateNodeSvgChart = function () {
