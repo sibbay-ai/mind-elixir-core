@@ -267,9 +267,13 @@ export function parseNodeObj(from, to, type) {
 }
 
 export function copyObj(obj) {
-  let newObj = Object.assign({}, obj)
+  let newObj = JSON.parse(JSON.stringify(obj, (k, v) => {
+    if (k === 'parent') return undefined
+    if (k === 'from') return v.nodeObj.id
+    if (k === 'to') return v.nodeObj.id
+    return v
+  }))
   newObj.id = generateUUID()
-  newObj.parent = undefined
   if (newObj.children && newObj.children.length > 0) {
     newObj.children = newObj.children.map((o) => {
       return copyObj(o)
