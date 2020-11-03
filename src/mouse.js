@@ -3,12 +3,15 @@ export default function (mind) {
   mind.map.addEventListener('click', e => {
     // if (dragMoveHelper.afterMoving) return
     e.preventDefault()
-    if (e.target.nodeName === 'EPD') {
+    if (e.target.nodeName === 'SPAN' && (e.target.className === 'topic-img-del' || e.target.className === 'del-button')) {
+      mind.delSelectImg(e.target)
+    } else if (e.target.nodeName === 'EPD') {
       mind.expandNode(e.target.previousSibling)
     } else if (
       e.target.parentElement.parentElement.parentElement.nodeName === 'T' ||
       e.target.parentElement.parentElement.parentElement.nodeName === 'ROOT'
     ) {
+      if (e.target.nodeName === 'IMG') mind.selectImg(e.target)
       mind.selectNode(e.target.parentElement.parentElement)
     } else if (
         e.target.parentElement.parentElement.nodeName === 'T' ||
@@ -28,6 +31,7 @@ export default function (mind) {
       // skip circle
     } else {
       mind.unselectNode()
+      mind.unselectImg()
       mind.hideLinkController()
     }
   })

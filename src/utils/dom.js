@@ -1,6 +1,7 @@
 import { LEFT, RIGHT, SIDE } from '../const'
 import vari from '../var'
-import {updateNodeStyleWithNode} from '../nodeOperation'
+import {updateNodeStyleWithNode, updateNodeImage} from '../nodeOperation'
+import i18n from "../i18n";
 
 // DOM manipulation
 let $d = document
@@ -28,6 +29,12 @@ export let createTop = function (nodeObj) {
   // TODO allow to add online image
   if (nodeObj.style) {
     updateNodeStyleWithNode(tpc, nodeObj)
+  }
+  if (nodeObj.image && nodeObj.image.url) {
+    let imageContainer = $d.createElement('div')
+    imageContainer.className = 'image'
+    imageContainer.innerHTML = `<img class="topic-img" src="${nodeObj.image.url}" style="width: ${nodeObj.image.w}px;height: ${nodeObj.image.h}px" alt=""/>`
+    tpc.insertBefore(imageContainer, getTopicDiv(tpc))
   }
   if (nodeObj.icons && nodeObj.icons.length > 0) {
     let iconsContainer = $d.createElement('span')
@@ -79,7 +86,7 @@ export function selectText(div) {
 export function createInputDiv(tpc) {
   console.time('createInputDiv')
   if (!tpc) return
-  let originDiv = this.getTopicDiv(tpc)
+  let originDiv = getTopicDiv(tpc)
   let div = $d.createElement('div')
   let origin = originDiv.innerHTML
   tpc.appendChild(div)
@@ -87,7 +94,10 @@ export function createInputDiv(tpc) {
   div.contentEditable = true
   div.spellcheck = false
   div.className = 'me-inputdiv'
-  div.style.cssText = `min-width:${originDiv.parentElement.offsetWidth - 12}px;min-height:${originDiv.parentElement.offsetHeight - 12}px;color:#2b2b2b;outline:1px solid rgb(204, 204, 204);margin:5px 0;`
+  let divMarginTop = 5
+  let imageDiv = getImageDiv(tpc)
+  if (imageDiv) divMarginTop += imageDiv.clientHeight
+  div.style.cssText = `min-width:${originDiv.parentElement.offsetWidth - 12}px;min-height:${originDiv.clientHeight}px;color:#2b2b2b;outline:1px solid rgb(204, 204, 204);margin:${divMarginTop}px 0;`
   if (this.direction === LEFT) div.style.right = 0
   div.focus()
 
@@ -99,23 +109,7 @@ export function createInputDiv(tpc) {
     obj: tpc.nodeObj,
   })
 
-  div.addEventListener('keydown', e => {
-    let key = e.keyCode
-    if (key === 8) {
-      // 不停止冒泡冒到document就把节点删了
-      e.stopPropagation()
-    } else if (key === 13 || key === 9) {
-      if (e.shiftKey) {
-        // shift enter
-        return
-      }
-      e.preventDefault()
-      this.inputDiv.blur()
-      this.map.focus()
-    }
-  })
-
-  div.addEventListener('blur', () => {
+  const blurInputDiv = () => {
     if (!div) return // 防止重复blur
     let node = tpc.nodeObj
     let topic = div.innerHTML
@@ -133,8 +127,92 @@ export function createInputDiv(tpc) {
     // tpc.childNodes[0].textContent = node.topic
     originDiv.innerHTML = node.topic
     this.linkDiv()
+  }
+
+  div.addEventListener('keydown', e => {
+    let key = e.keyCode
+    if (key === 8) {
+      // 不停止冒泡冒到document就把节点删了
+      e.stopPropagation()
+    } else if (key === 13 || key === 9) {
+      if (e.shiftKey) {
+        // shift enter
+        return
+      }
+      e.preventDefault()
+      this.inputDiv.blur()
+      this.map.focus()
+    }
+  })
+
+  div.addEventListener('blur', blurInputDiv)
+
+  div.addEventListener('paste', (e) => {
+    console.log('parse', e)
+    e.preventDefault()
+    let items = e.clipboardData && e.clipboardData.items
+    let imgFile = undefined
+    if (items && items.length) {
+      // 检索剪切板items
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].type.indexOf('image') !== -1) {
+          imgFile = items[i].getAsFile()
+          break
+        }
+      }
+    }
+    if (imgFile !== undefined) {
+      // 图片上传处理
+      console.log(imgFile)
+      if (this.imageUploadURL === '') {
+        console.log('image upload error, no imageURL')
+        return
+      }
+      let fd = new FormData()
+      fd.append('img', imgFile)
+      let xhr = new XMLHttpRequest()
+      xhr.open('POST', this.imageUploadURL)
+      xhr.addEventListener('load', (e) => {
+        try {
+          const respData = JSON.parse(e.target.responseText).data;
+          let imageURL = respData.full_url
+          tpc.nodeObj.image = {
+            url: imageURL, w: respData.width, h: respData.height
+          }
+          updateNodeImage(tpc.nodeObj)
+          imageDiv = getImageDiv(tpc)
+          if (div) div.style.marginTop = 5 + respData.height + 'px'
+          this.bus.fire('operation', { name: 'imageUpload', url: imageURL })
+          this.linkDiv()
+        } catch (e) {
+          console.error(e)
+        }
+      })
+      xhr.addEventListener('error', (e) => {
+        console.error(e)
+      })
+      xhr.send(fd)
+    } else {
+      // 文字去格式
+      let text = e.clipboardData.getData('text/plain')
+      if (text) {
+        if (document.queryCommandSupported('insertText')) {
+          document.execCommand('insertText', false, text);
+        } else {
+          document.execCommand('paste', false, text);
+        }
+      }
+    }
+    this.linkDiv()
   })
   console.timeEnd('createInputDiv')
+}
+
+export let createImageDeleteButton = function () {
+  let delButton = $d.createElement('span')
+  delButton.className = 'topic-img-del'
+  delButton.innerHTML = `<span class="del-button">🗑️</span>`
+  return delButton
 }
 
 export let createExpander = function (expanded) {
@@ -231,4 +309,15 @@ export let getTopicDiv = function (el) {
   const topics = el.getElementsByClassName('me-topic')
   if (topics.length > 0) return topics[0]
 }
+
+export let getIconsSpan = function (el) {
+  const icons = el.getElementsByClassName('icons')
+  if (icons.length > 0) return icons[0]
+}
+
+export let getImageDiv = function (el) {
+  const image = el.getElementsByClassName('image')
+  if (image.length > 0) return image[0]
+}
+
 

@@ -1,6 +1,8 @@
 /**
  * @namespace MapInteraction
  */
+import {createImageDeleteButton} from "./utils/dom";
+
 /**
  * @function
  * @instance
@@ -31,6 +33,32 @@ export let unselectNode = function () {
   this.currentNode = null
   this.bus.fire('unselectNode')
 }
+
+export let selectImg = function (targetElement) {
+  this.unselectImg()
+  targetElement.className += ' ' + targetElement.className + '-active'
+  let delB = createImageDeleteButton()
+  targetElement.parentElement.appendChild(delB)
+  this.currentImg = targetElement
+}
+
+export let unselectImg = function () {
+  if (this.currentImg) {
+    this.currentImg.className = this.currentImg.className.split(' ')[0]
+  }
+  this.currentImg = null
+}
+
+export let delSelectImg = function (targetElement) {
+  if (this.currentNode) {
+    this.currentNode.nodeObj.image = undefined
+    this.bus.fire('operation', { name: 'delSelectImg' })
+  }
+  if (targetElement.className === 'topic-img-del') targetElement.parentElement.remove()
+  if (targetElement.className === 'del-button') targetElement.parentElement.parentElement.remove()
+  this.linkDiv()
+}
+
 export let selectNextSibling = function () {
   if (!this.currentNode || this.currentNode.dataset.nodeid === 'meroot') return
 
