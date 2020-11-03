@@ -177,7 +177,7 @@ export function createInputDiv(tpc) {
           const respData = JSON.parse(e.target.responseText).data;
           let imageURL = respData.full_url
           tpc.nodeObj.image = {
-            url: imageURL, w: respData.width, h: respData.height
+            url: imageURL, w: respData.width, h: respData.height, key: respData.file_key
           }
           updateNodeImage(tpc.nodeObj)
           imageDiv = getImageDiv(tpc)
@@ -320,4 +320,13 @@ export let getImageDiv = function (el) {
   if (image.length > 0) return image[0]
 }
 
+export let getImageDelButton = function (el) {
+  const idb = el.getElementsByClassName('topic-img-del')
+  if (idb.length > 0) return idb[0]
+}
+
+export let getStatusButton = function (el=document) {
+  const sbutton = el.getElementsByClassName('tl-status-button')
+  if (sbutton.length > 0) return sbutton[0]
+}
 

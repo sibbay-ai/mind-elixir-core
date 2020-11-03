@@ -7,6 +7,13 @@ let createButton = (id, name) => {
     return button
 }
 
+let createStatusButton = (id) => {
+    let button = document.createElement('span')
+    button.id = id
+    button.className = 'tl-status-button'
+    return button
+}
+
 let toolBarRBContainer = document.createElement('toolbar')
 let fc = createButton('fullscreen', 'full')
 let gc = createButton('toCenter', 'living')
@@ -24,10 +31,12 @@ toolBarRBContainer.className = 'rb'
 
 
 let toolBarLTContainer = document.createElement('toolbar')
+let statusButton = createStatusButton('tbstatus')
 let l = createButton('tbltl', 'left')
 let r = createButton('tbltr', 'right')
 let s = createButton('tblts', 'side')
 // let d = createButton('zoomin', 'add')
+toolBarLTContainer.appendChild(statusButton)
 toolBarLTContainer.appendChild(l)
 toolBarLTContainer.appendChild(r)
 toolBarLTContainer.appendChild(s)
