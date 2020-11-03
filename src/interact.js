@@ -49,6 +49,16 @@ export let unselectImg = function () {
   this.currentImg = null
 }
 
+export let delSelectImg = function (targetElement) {
+  if (this.currentNode) {
+    this.currentNode.nodeObj.image = undefined
+    this.bus.fire('operation', { name: 'delSelectImg' })
+  }
+  if (targetElement.className === 'topic-img-del') targetElement.parentElement.remove()
+  if (targetElement.className === 'del-button') targetElement.parentElement.parentElement.remove()
+  this.linkDiv()
+}
+
 export let selectNextSibling = function () {
   if (!this.currentNode || this.currentNode.dataset.nodeid === 'meroot') return
 

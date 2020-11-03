@@ -4,10 +4,7 @@ export default function (mind) {
     // if (dragMoveHelper.afterMoving) return
     e.preventDefault()
     if (e.target.nodeName === 'SPAN' && (e.target.className === 'topic-img-del' || e.target.className === 'del-button')) {
-      if (mind.currentNode) mind.currentNode.nodeObj.image = undefined
-      if (e.target.className === 'topic-img-del') e.target.parentElement.remove()
-      if (e.target.className === 'del-button') e.target.parentElement.parentElement.remove()
-      mind.linkDiv()
+      mind.delSelectImg(e.target)
     } else if (e.target.nodeName === 'EPD') {
       mind.expandNode(e.target.previousSibling)
     } else if (
