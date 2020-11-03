@@ -1,7 +1,7 @@
 /**
  * @namespace MapInteraction
  */
-import {createImageDeleteButton} from "./utils/dom";
+import {createImageDeleteButton, getImageDelButton} from "./utils/dom";
 
 /**
  * @function
@@ -44,6 +44,8 @@ export let selectImg = function (targetElement) {
 
 export let unselectImg = function () {
   if (this.currentImg) {
+    const idelButton = getImageDelButton(this.currentImg.parentElement)
+    if (idelButton) idelButton.remove()
     this.currentImg.className = this.currentImg.className.split(' ')[0]
   }
   this.currentImg = null
